@@ -360,7 +360,7 @@ const InwardEntries = () => {
   // ---------------- SAVE
 
   const inwardService = new InwardService();
- // Fetch recent entries
+  // Fetch recent entries
   const fetchRecent = async () => {
     try {
       setLoading(true);
@@ -378,54 +378,54 @@ const InwardEntries = () => {
   }, []);
 
 
-  const handleSave = async () => {
-    if (!date || !bookId || !shopId || !agentId || !quantity) {
-      toast({
-        title: "Validation Error",
-        description: "Please fill all required fields",
-        variant: "destructive",
-      });
-      return;
-    }
+  // const handleSave = async () => {
+  //   if (!date || !bookId || !shopId || !agentId || !quantity) {
+  //     toast({
+  //       title: "Validation Error",
+  //       description: "Please fill all required fields",
+  //       variant: "destructive",
+  //     });
+  //     return;
+  //   }
 
-    const payload: InwardPayload = {
-      book_id: Number(bookId),
-      shop_id: Number(shopId),
-      agent_id: Number(agentId),
-      quantity: Number(quantity),
-      remarks: remarks || "",
-      inward_date: new Date(date).toISOString(),
-      created_by: "",
-    };
+  //   const payload: InwardPayload = {
+  //     book_id: Number(bookId),
+  //     shop_id: Number(shopId),
+  //     agent_id: Number(agentId),
+  //     quantity: Number(quantity),
+  //     remarks: remarks || "",
+  //     inward_date: new Date(date).toISOString(),
+  //     created_by: "",
+  //   };
 
-    try {
-      await inwardService.createInward(payload);
+  //   try {
+  //     await inwardService.createInward(payload);
 
-      toast({
-        title: "Entry Saved",
-        description: "Inward entry saved successfully",
-      });
+  //     toast({
+  //       title: "Entry Saved",
+  //       description: "Inward entry saved successfully",
+  //     });
 
-      // Reset form
-      setDate(undefined);
-      setBookId("");
-      setShopId("");
-      setAgentId("");
-      setQuantity("");
-      setBillNumber("");
-      setRemarks("");
-      fetchRecent();
-      
-    } catch (error) {
-      console.error("❌ SAVE ERROR 👉", error);
+  //     // Reset form
+  //     setDate(undefined);
+  //     setBookId("");
+  //     setShopId("");
+  //     setAgentId("");
+  //     setQuantity("");
+  //     setBillNumber("");
+  //     setRemarks("");
+  //     fetchRecent();
 
-      toast({
-        title: "Save Failed",
-        description: "Failed to save inward entry",
-        variant: "destructive",
-      });
-    }
-  };
+  //   } catch (error) {
+  //     console.error("❌ SAVE ERROR 👉", error);
+
+  //     toast({
+  //       title: "Save Failed",
+  //       description: "Failed to save inward entry",
+  //       variant: "destructive",
+  //     });
+  //   }
+  // };
 
   // const handleSave = () => {
   //   if (!date || !bookId || !shopId || !agentId || !quantity) {
@@ -507,20 +507,20 @@ const InwardEntries = () => {
                     setBookId(selectedBookId);
 
                     const selectedBook = books.find(
-                      (b) => String(b.BookId) === selectedBookId,
+                      (b) => String(b.bookId) === selectedBookId,
                     );
 
                     if (selectedBook) {
                       const agentName = getAgentNameFromBook(
-                        selectedBook.BookName,
+                        selectedBook.bookName,
                       );
 
                       const matchedAgent = agents.find(
-                        (a) => a.AgentName === agentName,
+                        (a) => a.agentName === agentName,
                       );
 
                       if (matchedAgent) {
-                        setAgentId(String(matchedAgent.AgentId));
+                        setAgentId(String(matchedAgent.agentId));
                       }
                     }
                   }}
@@ -530,13 +530,13 @@ const InwardEntries = () => {
                   </SelectTrigger>
                   <SelectContent>
                     {books
-                      .filter((b) => b.Active)
+                      // .filter((b) => b.Active)
                       .map((b) => (
                         <SelectItem
-                          key={String(b.BookId)}
-                          value={String(b.BookId)}
+                          key={String(b.bookId)}
+                          value={String(b.bookId)}
                         >
-                          {b.BookName}
+                          {b.bookName}
                         </SelectItem>
                       ))}
                   </SelectContent>
@@ -552,13 +552,13 @@ const InwardEntries = () => {
                   </SelectTrigger>
                   <SelectContent>
                     {shops
-                      .filter((s) => s.Active)
+                      // .filter((s) => s.Active)
                       .map((s) => (
                         <SelectItem
-                          key={String(s.ShopId)}
-                          value={String(s.ShopId)}
+                          key={String(s.shopId)}
+                          value={String(s.shopId)}
                         >
-                          {s.ShopName}
+                          {s.shopName}
                         </SelectItem>
                       ))}
                   </SelectContent>
@@ -586,15 +586,15 @@ const InwardEntries = () => {
                     {Array.from(
                       new Map(
                         agents
-                          .filter((a) => a.Active)
-                          .map((a) => [a.AgentName, a]),
+                          // .filter((a) => a.Active)
+                          .map((a) => [a.agentName, a]),
                       ).values(),
                     ).map((a) => (
                       <SelectItem
-                        key={String(a.AgentId)}
-                        value={String(a.AgentId)}
+                        key={String(a.agentId)}
+                        value={String(a.agentId)}
                       >
-                        {a.AgentName}
+                        {a.agentName}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -621,7 +621,7 @@ const InwardEntries = () => {
             </div>
 
             <div className="mt-6 flex justify-end">
-              <Button onClick={handleSave} className="gap-2">
+              <Button className="gap-2">
                 <Plus className="h-4 w-4" />
                 Save Inward Entry
               </Button>
@@ -651,17 +651,17 @@ const InwardEntries = () => {
                   </TableRow>
                 ) : (
                   recentEntries.map((e) => (
-                    <TableRow key={e.RowId}>
+                    <TableRow key={e.rowId}>
                       <TableCell>
                         {
-                          e.BookName /* replace with bookName if backend returns it */
+                          e.bookName /* replace with bookName if backend returns it */
                         }
                       </TableCell>
                       <TableCell className="text-right">
-                        <Badge>{e.Quantity}</Badge>
+                        <Badge>{e.quantity}</Badge>
                       </TableCell>
                       <TableCell>
-                        {new Date(e.InwardDate).toLocaleString()}
+                        {new Date(e.inwardDate).toLocaleString()}
                       </TableCell>
                     </TableRow>
                   ))
