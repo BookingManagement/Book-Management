@@ -21,12 +21,12 @@ namespace Book_backend.Controllers
 
             // POST: api/Inward
             [HttpPost]
-            public async Task<IActionResult> createInward([FromBody] InwardDto dto)
+            public async Task<IActionResult> CreateInward([FromBody] InwardDto dto)
             {
                 if (!ModelState.IsValid)
                     return BadRequest(ModelState);
 
-                // 🔹 Validate Foreign Keys (Important)
+                // Validate Foreign Keys 
                 var bookExists = await _context.BookMasters.AnyAsync(b => b.BookId == dto.BookId);
                 var shopExists = await _context.ShopMasters.AnyAsync(s => s.ShopId == dto.ShopId);
                 var agentExists = await _context.AgentMasters.AnyAsync(a => a.AgentId == dto.AgentId);
@@ -36,7 +36,7 @@ namespace Book_backend.Controllers
                     return BadRequest("Invalid Book, Shop, or Agent ID");
                 }
 
-                // 🔹 Map DTO → Model
+                //  Map DTO → Model
                 var inward = new InwardMaster
                 {
                     BookId = dto.BookId,
@@ -44,14 +44,15 @@ namespace Book_backend.Controllers
                     AgentId = dto.AgentId,
                     Quantity = dto.Quantity,
                     Remarks = dto.Remarks,
-                    InwardDate = dto.InwardDate,
+                    //InwardDate = dto.InwardDate,
+                    InwardDate = DateTime.Now,
                     Status = "Created",
                     Active = true,
                     CreatedBy = dto.CreatedBy,
                     CreatedDate = DateTime.Now
                 };
 
-                // 🔹 Save
+                // Save
                 _context.InwardMasters.Add(inward);
                 await _context.SaveChangesAsync();
 

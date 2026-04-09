@@ -378,90 +378,62 @@ const InwardEntries = () => {
   }, []);
 
 
-  // const handleSave = async () => {
-  //   if (!date || !bookId || !shopId || !agentId || !quantity) {
-  //     toast({
-  //       title: "Validation Error",
-  //       description: "Please fill all required fields",
-  //       variant: "destructive",
-  //     });
-  //     return;
-  //   }
+  const handleSave = async () => {
+    if (!date || !bookId || !shopId || !agentId || !quantity) {
+      toast({
+        title: "Validation Error",
+        description: "Please fill all required fields",
+        variant: "destructive",
+      });
+      return;
+    }
 
-  //   const payload: InwardPayload = {
-  //     book_id: Number(bookId),
-  //     shop_id: Number(shopId),
-  //     agent_id: Number(agentId),
-  //     quantity: Number(quantity),
-  //     remarks: remarks || "",
-  //     inward_date: new Date(date).toISOString(),
-  //     created_by: "",
-  //   };
+    // Merge the selected date with the exact current time
+    const now = new Date();
+    const submissionDate = new Date(date);
+    submissionDate.setHours(now.getHours(), now.getMinutes(), now.getSeconds());
 
-  //   try {
-  //     await inwardService.createInward(payload);
+    const payload: InwardPayload = {
+      bookId: Number(bookId),
+      shopId: Number(shopId),
+      agentId: Number(agentId),
+      quantity: Number(quantity),
+      remarks: remarks || "",
+      // Send the date in local format so backend saves exactly this day, avoiding UTC offset issues
+      inwardDate: format(submissionDate, "yyyy-MM-dd'T'HH:mm:ss"),
+      createdBy: "admin",
+    };
 
-  //     toast({
-  //       title: "Entry Saved",
-  //       description: "Inward entry saved successfully",
-  //     });
+    try {
+      await inwardService.createInward(payload);
 
-  //     // Reset form
-  //     setDate(undefined);
-  //     setBookId("");
-  //     setShopId("");
-  //     setAgentId("");
-  //     setQuantity("");
-  //     setBillNumber("");
-  //     setRemarks("");
-  //     fetchRecent();
+      toast({
+        title: "Entry Saved",
+        description: "Inward entry saved successfully",
+      });
 
-  //   } catch (error) {
-  //     console.error("❌ SAVE ERROR 👉", error);
+      // Reset form
+      setDate(undefined);
+      setBookId("");
+      setShopId("");
+      setAgentId("");
+      setQuantity("");
+      setBillNumber("");
+      setRemarks("");
+      fetchRecent();
 
-  //     toast({
-  //       title: "Save Failed",
-  //       description: "Failed to save inward entry",
-  //       variant: "destructive",
-  //     });
-  //   }
-  // };
+    } catch (error) {
+      console.error("❌ SAVE ERROR 👉", error);
 
-  // const handleSave = () => {
-  //   if (!date || !bookId || !shopId || !agentId || !quantity) {
-  //     toast({
-  //       title: "Validation Error",
-  //       description: "Please fill all required fields",
-  //       variant: "destructive",
-  //     });
-  //     return;
-  //   }
+      toast({
+        title: "Save Failed",
+        description: "Failed to save inward entry",
+        variant: "destructive",
+      });
+    }
+  };
 
-  //   const payload = {
-  //     inwardDate: date,
-  //     bookId,
-  //     shopId,
-  //     agentId,
-  //     quantity: Number(quantity),
-  //     billNumber,
-  //     remarks,
-  //   };
 
-  //   console.log("SAVE PAYLOAD 👉", payload);
-
-  //   toast({
-  //     title: "Entry Saved",
-  //     description: "Inward entry saved successfully",
-  //   });
-
-  //   setDate(undefined);
-  //   setBookId("");
-  //   setShopId("");
-  //   setAgentId("");
-  //   setQuantity("");
-  //   setBillNumber("");
-  //   setRemarks("");
-  // };
 
   return (
     <MainLayout title="Inward Entry" subtitle="Record new stock arrivals">
@@ -621,7 +593,7 @@ const InwardEntries = () => {
             </div>
 
             <div className="mt-6 flex justify-end">
-              <Button className="gap-2">
+              <Button onClick={handleSave} className="gap-2">
                 <Plus className="h-4 w-4" />
                 Save Inward Entry
               </Button>

@@ -1,7 +1,7 @@
 [
   {
     "ContainingType": "Book_backend.Controllers.InwardController",
-    "Method": "createInward",
+    "Method": "CreateInward",
     "RelativePath": "api/Inward",
     "HttpMethod": "POST",
     "IsController": true,

@@ -7,7 +7,7 @@
         public int AgentId { get; set; }
         public int Quantity { get; set; }
         public string? Remarks { get; set; }
-        public DateTime InwardDate { get; set; }
+        public DateTime InwardDate { get; set; } = DateTime.Now;
         public string? CreatedBy { get; set; }
     }
 }
